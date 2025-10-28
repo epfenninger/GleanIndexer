@@ -49,11 +49,13 @@ indexer.index_item(
 )
 ````
 
+Note: `index_item` maps `description` to the summary. To include a body, use `index_items` and include a `body` field per item.
+
 Batch index multiple documents (incremental by default):
 ````python
 items = [
-  {"id":"1","name":"Doc 1","object_type":"obj","url":"https://example.com/1","summary":"Hello 1","custom_fields":{"category":"internal"}},
-  {"id":"2","name":"Doc 2","object_type":"obj","url":"https://example.com/2","summary":"Hello 2","custom_fields":{"category":"internal"}}
+  {"id":"1","name":"Doc 1","object_type":"obj","url":"https://example.com/1","summary":"Hello 1","body":"Body 1","custom_fields":{"category":"internal"}},
+  {"id":"2","name":"Doc 2","object_type":"obj","url":"https://example.com/2","summary":"Hello 2","body":"Body 2","custom_fields":{"category":"internal"}}
 ]
 indexer.index_items(items=items, datasource="my_ds", upload_id_prefix="my_upload")
 ````
@@ -106,7 +108,8 @@ indexer.index_items(
   - Adds allowed (beta) users to a datasource.
 
 - index_item(doc_id, name, datasource, object_type, url, description="", tags=None, permissions=None, created_at=None, updated_at=None, custom_fields=None, max_retries=5)
-  - Indexes a single document. `custom_fields` can be a dict, which is converted to the API’s `customProperties` list.
+  - Indexes a single document. The `description` parameter populates the summary for the document. This method does not accept a `body` field; use `index_items` if you need to include a body.
+  - `custom_fields` can be a dict, which is converted to the API’s `customProperties` list.
 
 - index_items(items, datasource, upload_id_prefix, bulk=False, deleteStale=False, max_retries=5, batch_size=600, post_batch_sleep=15.0)
   - Batch index documents. If `bulk=True`, uses the bulk endpoint with paging flags and optional `deleteStale` on the last page.
@@ -130,7 +133,8 @@ indexer.index_items(
 
 ### Document Schema Notes
 - Required per document: `id`, `name`, `object_type`, `url`
-- Optional: `summary` (HTML), `body` (HTML), `tags` (list), `permissions` (dict), `created_at`
+- Optional: `summary`, `body`, `tags` (list), `permissions` (dict), `created_at`
+- Note: `index_item` maps the `description` argument to the summary. To include a body, use `index_items`.
 ### Custom fields vs. customProperties
 - In this client, you set custom fields using the Python argument `custom_fields` (a dict).
 - Under the hood, the client converts `custom_fields` into Glean's `customProperties` list of `{name, value}` pairs.
