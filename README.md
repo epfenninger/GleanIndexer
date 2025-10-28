@@ -43,7 +43,7 @@ indexer.index_item(
   datasource="my_ds",
   object_type="my_object",
   url="https://example.com/doc-1",
-  description="Hello world",
+  description="Summary goes here",  # summary
   # Pass custom fields as a dict; the client converts this to Glean's customProperties list
   custom_fields={"category":"internal","priority":"p1"}
 )
